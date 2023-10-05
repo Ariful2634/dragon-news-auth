@@ -5,15 +5,18 @@ import auth from '../firebase/firebase.config';
 export const AuthContext = createContext(null)
 const AuthProvider = ({ children }) => {
     const [user,setUser]=useState(null)
+    const [loading,setLoading]=useState(true)
 
 
     // create user
     const createUser = (email, password) => {
+        setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password)
     }
 
     // login user
     const  logIn = (email,password)=>{
+        setLoading(true)
        return signInWithEmailAndPassword(auth,email,password)
     }
 
@@ -23,6 +26,7 @@ const AuthProvider = ({ children }) => {
     // log out
 
     const logOut=()=>{
+        setLoading(true)
         return signOut(auth)
     }
 
@@ -30,6 +34,7 @@ const AuthProvider = ({ children }) => {
     useEffect(()=>{
         onAuthStateChanged(auth,(user)=>{
             setUser(user)
+            setLoading(false)
         })
     },[])
     // console.log(user)
@@ -38,6 +43,7 @@ const AuthProvider = ({ children }) => {
 
     const authInfo = {
         user,
+        loading,
         createUser,
         logIn,
         logOut
